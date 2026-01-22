@@ -9,10 +9,7 @@ export async function POST(request: Request) {
 
     // Verify authorization
     if (authHeader !== `Bearer ${secret}`) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Run the seed script
@@ -37,7 +34,7 @@ export async function POST(request: Request) {
         details: error.message,
         output: error.stdout || error.stderr,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -49,10 +46,7 @@ export async function GET(request: Request) {
     const secret = process.env.SEED_SECRET || "change-this-secret";
 
     if (authHeader !== `Bearer ${secret}`) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Check if database has data
@@ -75,7 +69,7 @@ export async function GET(request: Request) {
         error: "Failed to check database status",
         details: error.message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -1,29 +1,23 @@
 import { PrismaClient } from "@/lib/generated/prisma";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
-import path from "path";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-// Get absolute database path
-// In production (Vercel), use /tmp which is writable
-// In development, use local prisma folder
-const isProduction = process.env.NODE_ENV === "production";
-const dbPath = isProduction
-  ? "/tmp/dev.db"
-  : path.resolve(process.cwd(), "prisma", "dev.db");
-
-const adapter = new PrismaBetterSqlite3({
-  url: `file:${dbPath}`,
-});
+// Create PostgreSQL connection pool
+const connectionString = process.env.DATABASE_URL!;
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
 
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
     adapter,
+    log: ["error"],
   });
 
-if (!isProduction) globalForPrisma.prisma = prisma;
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 export default prisma;

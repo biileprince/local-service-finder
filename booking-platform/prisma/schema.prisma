@@ -1,59 +1,48 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
   output   = "../lib/generated/prisma"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
-// User model - both customers and service providers
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  password      String
-  name          String
-  phone         String?
-  avatar        String?
-  role          String    @default("customer") // "customer" | "provider" | "admin"
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  // Relations
-  provider      Provider?
-  bookings      Booking[]  @relation("CustomerBookings")
-  reviews       Review[]
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String
+  name      String
+  phone     String?
+  avatar    String?
+  role      String    @default("customer")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  bookings  Booking[] @relation("CustomerBookings")
+  provider  Provider?
+  reviews   Review[]
 
   @@index([email])
 }
 
-// Service Provider model
 model Provider {
-  id              String    @id @default(cuid())
-  userId          String    @unique
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+  id              String              @id @default(cuid())
+  userId          String              @unique
   bio             String?
   hourlyRate      Float
-  yearsExperience Int       @default(0)
+  yearsExperience Int                 @default(0)
   location        String
-  distance        String?   @default("0 mi")
-  verified        Boolean   @default(false)
-  featured        Boolean   @default(false)
-  rating          Float     @default(0)
-  reviewCount     Int       @default(0)
-  
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  // Relations
-  categories      ProviderCategory[]
-  specialties     ProviderSpecialty[]
+  distance        String?             @default("0 mi")
+  verified        Boolean             @default(false)
+  featured        Boolean             @default(false)
+  rating          Float               @default(0)
+  reviewCount     Int                 @default(0)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
   availability    Availability[]
   bookings        Booking[]
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categories      ProviderCategory[]
+  specialties     ProviderSpecialty[]
   reviews         Review[]
 
   @@index([verified])
@@ -61,91 +50,76 @@ model Provider {
   @@index([rating])
 }
 
-// Service Category model
 model Category {
-  id          String    @id @default(cuid())
-  name        String    @unique
-  slug        String    @unique
+  id          String             @id @default(cuid())
+  name        String             @unique
+  slug        String             @unique
   description String?
   icon        String?
   color       String?
-  count       Int       @default(0)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  // Relations
+  count       Int                @default(0)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
   providers   ProviderCategory[]
 
   @@index([slug])
 }
 
-// Many-to-many relation between Provider and Category
 model ProviderCategory {
-  id          String    @id @default(cuid())
-  providerId  String
-  categoryId  String
-  provider    Provider  @relation(fields: [providerId], references: [id], onDelete: Cascade)
-  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  id         String   @id @default(cuid())
+  providerId String
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
 
   @@unique([providerId, categoryId])
 }
 
-// Provider Specialties
 model ProviderSpecialty {
-  id          String    @id @default(cuid())
-  providerId  String
-  specialty   String
-  provider    Provider  @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  id         String   @id @default(cuid())
+  providerId String
+  specialty  String
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
 
   @@index([providerId])
 }
 
-// Provider Availability
 model Availability {
-  id          String    @id @default(cuid())
-  providerId  String
-  date        String    // Format: YYYY-MM-DD
-  provider    Provider  @relation(fields: [providerId], references: [id], onDelete: Cascade)
-
-  // Relations
-  timeSlots   TimeSlot[]
+  id         String     @id @default(cuid())
+  providerId String
+  date       String
+  provider   Provider   @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  timeSlots  TimeSlot[]
 
   @@unique([providerId, date])
   @@index([date])
 }
 
-// Time slots for availability
 model TimeSlot {
-  id              String       @id @default(cuid())
-  availabilityId  String
-  time            String       // Format: "9:00 AM"
-  available       Boolean      @default(true)
-  isFastest       Boolean      @default(false)
-  availability    Availability @relation(fields: [availabilityId], references: [id], onDelete: Cascade)
+  id             String       @id @default(cuid())
+  availabilityId String
+  time           String
+  available      Boolean      @default(true)
+  isFastest      Boolean      @default(false)
+  availability   Availability @relation(fields: [availabilityId], references: [id], onDelete: Cascade)
 
   @@index([availabilityId])
 }
 
-// Booking model
 model Booking {
-  id                  String    @id @default(cuid())
-  customerId          String
-  providerId          String
-  
-  date                String    // Format: YYYY-MM-DD
-  time                String    // Format: "9:00 AM"
-  serviceAddress      String
-  problemDescription  String
-  
-  status              String    @default("pending") // "pending" | "confirmed" | "in_progress" | "completed" | "cancelled"
-  totalAmount         Float?
-  
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-
-  // Relations
-  customer            User      @relation("CustomerBookings", fields: [customerId], references: [id], onDelete: Cascade)
-  provider            Provider  @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  id                 String   @id @default(cuid())
+  customerId         String
+  providerId         String
+  date               String
+  time               String
+  serviceAddress     String
+  problemDescription String
+  status             String   @default("pending")
+  totalAmount        Float?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  customer           User     @relation("CustomerBookings", fields: [customerId], references: [id], onDelete: Cascade)
+  provider           Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
 
   @@index([customerId])
   @@index([providerId])
@@ -153,19 +127,16 @@ model Booking {
   @@index([date])
 }
 
-// Review model
 model Review {
-  id          String    @id @default(cuid())
-  userId      String
-  providerId  String
-  rating      Int       // 1-5
-  comment     String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  // Relations
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  provider    Provider  @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  id         String   @id @default(cuid())
+  userId     String
+  providerId String
+  rating     Int
+  comment    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, providerId])
   @@index([providerId])

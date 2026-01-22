@@ -21,6 +21,7 @@ curl -X GET https://your-app.vercel.app/api/seed \
 ```
 
 Response:
+
 ```json
 {
   "seeded": false,
@@ -40,6 +41,7 @@ curl -X POST https://your-app.vercel.app/api/seed \
 ```
 
 Response:
+
 ```json
 {
   "success": true,
@@ -80,6 +82,7 @@ jobs:
 ```
 
 Add secrets to GitHub:
+
 - `VERCEL_URL` - Your Vercel deployment URL
 - `SEED_SECRET` - Same as in Vercel environment variables
 
@@ -95,11 +98,13 @@ Add secrets to GitHub:
 When you migrate to PostgreSQL for production:
 
 1. Run migrations first:
+
 ```bash
 DATABASE_URL="your-postgres-url" npx prisma migrate deploy
 ```
 
 2. Then seed:
+
 ```bash
 curl -X POST https://your-app.vercel.app/api/seed \
   -H "Authorization: Bearer your-seed-secret"

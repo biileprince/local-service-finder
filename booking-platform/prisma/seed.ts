@@ -37,7 +37,6 @@ async function main() {
   } catch (error) {
     console.log("✅ No existing data to clear (fresh database)");
   }
-  }
 
   // Create categories
   const categories = await Promise.all([

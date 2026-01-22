@@ -7,7 +7,13 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 // Get absolute database path
-const dbPath = path.resolve(process.cwd(), "prisma", "dev.db");
+// In production (Vercel), use /tmp which is writable
+// In development, use local prisma folder
+const isProduction = process.env.NODE_ENV === "production";
+const dbPath = isProduction
+  ? "/tmp/dev.db"
+  : path.resolve(process.cwd(), "prisma", "dev.db");
+
 const adapter = new PrismaBetterSqlite3({
   url: `file:${dbPath}`,
 });
@@ -18,6 +24,6 @@ export const prisma =
     adapter,
   });
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+if (!isProduction) globalForPrisma.prisma = prisma;
 
 export default prisma;

@@ -4,8 +4,14 @@ import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import path from "path";
 import bcrypt from "bcryptjs";
 
-// Get absolute database path (parent directory + prisma/dev.db)
-const dbPath = path.resolve(__dirname, "dev.db");
+// Get absolute database path
+// In production (Vercel), use /tmp which is writable
+// In development, use local prisma folder
+const isProduction = process.env.NODE_ENV === "production";
+const dbPath = isProduction
+  ? "/tmp/dev.db"
+  : path.resolve(__dirname, "dev.db");
+
 const adapter = new PrismaBetterSqlite3({
   url: `file:${dbPath}`,
 });
@@ -13,6 +19,8 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("🌱 Starting database seed...");
+  console.log(`📍 Database path: ${dbPath}`);
+  console.log(`🌍 Environment: ${isProduction ? "production" : "development"}`);
 
   // Clear existing data (try-catch in case tables don't exist yet)
   try {
@@ -28,6 +36,7 @@ async function main() {
     console.log("✅ Cleared existing data");
   } catch (error) {
     console.log("✅ No existing data to clear (fresh database)");
+  }
   }
 
   // Create categories

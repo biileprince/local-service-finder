@@ -1,0 +1,557 @@
+import { Provider, Category } from "@/types";
+
+export const categories: Category[] = [
+  {
+    id: "plumbing",
+    name: "Plumbing",
+    icon: "Wrench",
+    description: "Emergency repairs, installations & maintenance",
+  },
+  {
+    id: "electrical",
+    name: "Electrical",
+    icon: "Zap",
+    description: "Licensed electricians for all your electrical needs",
+  },
+  {
+    id: "cleaning",
+    name: "Cleaning",
+    icon: "Sparkles",
+    description: "Professional cleaning services for home & office",
+  },
+  {
+    id: "handyman",
+    name: "Handyman",
+    icon: "Hammer",
+    description: "General repairs and home improvement",
+  },
+  {
+    id: "hvac",
+    name: "HVAC",
+    icon: "Wind",
+    description: "Heating, ventilation & air conditioning services",
+  },
+  {
+    id: "painting",
+    name: "Painting",
+    icon: "Paintbrush",
+    description: "Interior & exterior painting services",
+  },
+];
+
+export const providers: Provider[] = [
+  {
+    id: "1",
+    name: "Mike's Plumbing Pro",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Mike",
+    category: "plumbing",
+    hourlyRate: 85,
+    rating: 4.9,
+    reviewCount: 127,
+    location: "Downtown",
+    distance: "2.5 km away",
+    bio: "Licensed master plumber with 15 years of experience. Specializing in emergency repairs, pipe installations, and water heater services. Available 24/7 for emergencies.",
+    verified: true,
+    featured: true,
+    phone: "(555) 123-4567",
+    yearsExperience: 15,
+    specialties: [
+      "Emergency Repairs",
+      "Pipe Installation",
+      "Water Heaters",
+      "Drain Cleaning",
+    ],
+    availability: [
+      {
+        date: "2026-01-22",
+        times: [
+          { time: "9:00 AM", available: true, isFastest: true },
+          { time: "10:00 AM", available: true },
+          { time: "11:00 AM", available: false },
+          { time: "1:00 PM", available: true },
+          { time: "2:00 PM", available: false },
+          { time: "3:00 PM", available: true },
+        ],
+      },
+      {
+        date: "2026-01-23",
+        times: [
+          { time: "9:00 AM", available: true },
+          { time: "10:00 AM", available: true },
+          { time: "11:00 AM", available: true },
+          { time: "1:00 PM", available: false },
+          { time: "2:00 PM", available: true },
+          { time: "3:00 PM", available: true },
+        ],
+      },
+      {
+        date: "2026-01-24",
+        times: [
+          { time: "9:00 AM", available: false },
+          { time: "10:00 AM", available: true },
+          { time: "11:00 AM", available: true },
+          { time: "1:00 PM", available: true },
+          { time: "2:00 PM", available: true },
+          { time: "3:00 PM", available: false },
+        ],
+      },
+    ],
+    reviews: [
+      {
+        id: "r1",
+        userName: "Sarah Johnson",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
+        rating: 5,
+        date: "2026-01-15",
+        comment:
+          "Mike was fantastic! Fixed our emergency leak within an hour. Professional, clean, and fair pricing.",
+      },
+      {
+        id: "r2",
+        userName: "David Chen",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=David",
+        rating: 5,
+        date: "2026-01-10",
+        comment:
+          "Excellent service! Installed our new water heater quickly and explained everything clearly.",
+      },
+      {
+        id: "r3",
+        userName: "Emily Rodriguez",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emily",
+        rating: 4,
+        date: "2026-01-05",
+        comment:
+          "Very knowledgeable and arrived on time. Would definitely recommend!",
+      },
+    ],
+  },
+  {
+    id: "2",
+    name: "Spark Electric Solutions",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Spark",
+    category: "electrical",
+    hourlyRate: 95,
+    rating: 4.8,
+    reviewCount: 203,
+    location: "North Side",
+    distance: "3.8 km away",
+    bio: "Certified electricians providing safe and reliable electrical services. From panel upgrades to smart home installations, we do it all with precision and care.",
+    verified: true,
+    featured: true,
+    phone: "(555) 234-5678",
+    yearsExperience: 12,
+    specialties: [
+      "Panel Upgrades",
+      "Smart Home",
+      "Lighting Installation",
+      "Electrical Repairs",
+    ],
+    availability: [
+      {
+        date: "2026-01-22",
+        times: [
+          { time: "9:00 AM", available: true },
+          { time: "10:00 AM", available: false },
+          { time: "11:00 AM", available: true, isFastest: true },
+          { time: "1:00 PM", available: true },
+          { time: "2:00 PM", available: true },
+          { time: "3:00 PM", available: false },
+        ],
+      },
+      {
+        date: "2026-01-23",
+        times: [
+          { time: "9:00 AM", available: true },
+          { time: "10:00 AM", available: true },
+          { time: "11:00 AM", available: false },
+          { time: "1:00 PM", available: true },
+          { time: "2:00 PM", available: false },
+          { time: "3:00 PM", available: true },
+        ],
+      },
+      {
+        date: "2026-01-24",
+        times: [
+          { time: "9:00 AM", available: true },
+          { time: "10:00 AM", available: true },
+          { time: "11:00 AM", available: true },
+          { time: "1:00 PM", available: true },
+          { time: "2:00 PM", available: true },
+          { time: "3:00 PM", available: true },
+        ],
+      },
+    ],
+    reviews: [
+      {
+        id: "r4",
+        userName: "Michael Brown",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael",
+        rating: 5,
+        date: "2026-01-18",
+        comment:
+          "Upgraded our entire electrical panel. Work was top-notch and they cleaned up perfectly.",
+      },
+      {
+        id: "r5",
+        userName: "Lisa Wang",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Lisa",
+        rating: 5,
+        date: "2026-01-12",
+        comment:
+          "Installed smart switches throughout our home. Very professional and explained everything.",
+      },
+      {
+        id: "r6",
+        userName: "James Wilson",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=James",
+        rating: 4,
+        date: "2026-01-08",
+        comment:
+          "Great service, arrived on time and fixed our electrical issue quickly.",
+      },
+    ],
+  },
+  {
+    id: "3",
+    name: "Crystal Clean Services",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Crystal",
+    category: "cleaning",
+    hourlyRate: 65,
+    rating: 4.7,
+    reviewCount: 156,
+    location: "West End",
+    distance: "1.2 km away",
+    bio: "Professional cleaning services with eco-friendly products. We treat your home like our own. Residential and commercial cleaning available.",
+    verified: true,
+    phone: "(555) 345-6789",
+    yearsExperience: 8,
+    specialties: [
+      "Deep Cleaning",
+      "Move-in/Move-out",
+      "Office Cleaning",
+      "Eco-Friendly",
+    ],
+    availability: [
+      {
+        date: "2026-01-22",
+        times: [
+          { time: "9:00 AM", available: true, isFastest: true },
+          { time: "10:00 AM", available: true },
+          { time: "11:00 AM", available: true },
+          { time: "1:00 PM", available: false },
+          { time: "2:00 PM", available: true },
+          { time: "3:00 PM", available: true },
+        ],
+      },
+      {
+        date: "2026-01-23",
+        times: [
+          { time: "9:00 AM", available: false },
+          { time: "10:00 AM", available: true },
+          { time: "11:00 AM", available: true },
+          { time: "1:00 PM", available: true },
+          { time: "2:00 PM", available: true },
+          { time: "3:00 PM", available: false },
+        ],
+      },
+      {
+        date: "2026-01-24",
+        times: [
+          { time: "9:00 AM", available: true },
+          { time: "10:00 AM", available: true },
+          { time: "11:00 AM", available: false },
+          { time: "1:00 PM", available: true },
+          { time: "2:00 PM", available: true },
+          { time: "3:00 PM", available: true },
+        ],
+      },
+    ],
+    reviews: [
+      {
+        id: "r7",
+        userName: "Amanda Martinez",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Amanda",
+        rating: 5,
+        date: "2026-01-16",
+        comment:
+          "Amazing deep clean! House sparkles and smells wonderful. Very thorough team.",
+      },
+      {
+        id: "r8",
+        userName: "Robert Taylor",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Robert",
+        rating: 4,
+        date: "2026-01-11",
+        comment:
+          "Good service, arrived on time and did a thorough job. Would book again.",
+      },
+      {
+        id: "r9",
+        userName: "Jennifer Lee",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jennifer",
+        rating: 5,
+        date: "2026-01-06",
+        comment:
+          "Love their eco-friendly approach. House is spotless and no harsh chemical smell!",
+      },
+    ],
+  },
+  {
+    id: "4",
+    name: "HandyMax Services",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Max",
+    category: "handyman",
+    hourlyRate: 75,
+    rating: 4.6,
+    reviewCount: 89,
+    location: "East District",
+    distance: "4.5 km away",
+    bio: "Your go-to handyman for all home repairs and improvements. From furniture assembly to drywall repairs, we handle it all with expertise.",
+    verified: true,
+    phone: "(555) 456-7890",
+    yearsExperience: 10,
+    specialties: [
+      "Furniture Assembly",
+      "Drywall Repair",
+      "Door Installation",
+      "General Repairs",
+    ],
+    availability: [
+      {
+        date: "2026-01-22",
+        times: [
+          { time: "9:00 AM", available: false },
+          { time: "10:00 AM", available: true },
+          { time: "11:00 AM", available: true },
+          { time: "1:00 PM", available: true, isFastest: true },
+          { time: "2:00 PM", available: false },
+          { time: "3:00 PM", available: true },
+        ],
+      },
+      {
+        date: "2026-01-23",
+        times: [
+          { time: "9:00 AM", available: true },
+          { time: "10:00 AM", available: true },
+          { time: "11:00 AM", available: true },
+          { time: "1:00 PM", available: true },
+          { time: "2:00 PM", available: true },
+          { time: "3:00 PM", available: true },
+        ],
+      },
+      {
+        date: "2026-01-24",
+        times: [
+          { time: "9:00 AM", available: true },
+          { time: "10:00 AM", available: false },
+          { time: "11:00 AM", available: true },
+          { time: "1:00 PM", available: false },
+          { time: "2:00 PM", available: true },
+          { time: "3:00 PM", available: true },
+        ],
+      },
+    ],
+    reviews: [
+      {
+        id: "r10",
+        userName: "Kevin Anderson",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Kevin",
+        rating: 5,
+        date: "2026-01-14",
+        comment:
+          "Assembled all our IKEA furniture quickly and perfectly. Highly recommend!",
+      },
+      {
+        id: "r11",
+        userName: "Maria Garcia",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Maria",
+        rating: 4,
+        date: "2026-01-09",
+        comment:
+          "Fixed multiple issues around the house. Very handy and reliable.",
+      },
+      {
+        id: "r12",
+        userName: "Thomas White",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Thomas",
+        rating: 5,
+        date: "2026-01-04",
+        comment:
+          "Great work on our door installation. Professional and efficient.",
+      },
+    ],
+  },
+  {
+    id: "5",
+    name: "Cool Breeze HVAC",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Breeze",
+    category: "hvac",
+    hourlyRate: 105,
+    rating: 4.9,
+    reviewCount: 178,
+    location: "South Bay",
+    distance: "5.2 km away",
+    bio: "Expert HVAC technicians keeping your home comfortable year-round. AC installation, furnace repair, and maintenance services available 24/7.",
+    verified: true,
+    featured: true,
+    phone: "(555) 567-8901",
+    yearsExperience: 18,
+    specialties: [
+      "AC Installation",
+      "Furnace Repair",
+      "Duct Cleaning",
+      "Maintenance Plans",
+    ],
+    availability: [
+      {
+        date: "2026-01-22",
+        times: [
+          { time: "9:00 AM", available: true },
+          { time: "10:00 AM", available: true, isFastest: true },
+          { time: "11:00 AM", available: false },
+          { time: "1:00 PM", available: false },
+          { time: "2:00 PM", available: true },
+          { time: "3:00 PM", available: true },
+        ],
+      },
+      {
+        date: "2026-01-23",
+        times: [
+          { time: "9:00 AM", available: true },
+          { time: "10:00 AM", available: false },
+          { time: "11:00 AM", available: true },
+          { time: "1:00 PM", available: true },
+          { time: "2:00 PM", available: true },
+          { time: "3:00 PM", available: false },
+        ],
+      },
+      {
+        date: "2026-01-24",
+        times: [
+          { time: "9:00 AM", available: false },
+          { time: "10:00 AM", available: true },
+          { time: "11:00 AM", available: true },
+          { time: "1:00 PM", available: true },
+          { time: "2:00 PM", available: false },
+          { time: "3:00 PM", available: true },
+        ],
+      },
+    ],
+    reviews: [
+      {
+        id: "r13",
+        userName: "Patricia Moore",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Patricia",
+        rating: 5,
+        date: "2026-01-17",
+        comment:
+          "Saved us during a heat wave! New AC unit installed perfectly and cooling beautifully.",
+      },
+      {
+        id: "r14",
+        userName: "Christopher Davis",
+        userAvatar:
+          "https://api.dicebear.com/7.x/avataaars/svg?seed=Christopher",
+        rating: 5,
+        date: "2026-01-13",
+        comment:
+          "Annual maintenance service was thorough. Technician was knowledgeable and friendly.",
+      },
+      {
+        id: "r15",
+        userName: "Sandra Miller",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sandra",
+        rating: 4,
+        date: "2026-01-07",
+        comment:
+          "Fixed our furnace quickly. Professional service and fair pricing.",
+      },
+    ],
+  },
+  {
+    id: "6",
+    name: "Perfect Paint Co.",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Paint",
+    category: "painting",
+    hourlyRate: 70,
+    rating: 4.5,
+    reviewCount: 112,
+    location: "Central District",
+    distance: "3.1 km away",
+    bio: "Professional painters delivering flawless finishes. Interior and exterior painting with premium quality paints and expert color consultation.",
+    verified: true,
+    phone: "(555) 678-9012",
+    yearsExperience: 11,
+    specialties: [
+      "Interior Painting",
+      "Exterior Painting",
+      "Color Consultation",
+      "Cabinet Refinishing",
+    ],
+    availability: [
+      {
+        date: "2026-01-22",
+        times: [
+          { time: "9:00 AM", available: true, isFastest: true },
+          { time: "10:00 AM", available: true },
+          { time: "11:00 AM", available: true },
+          { time: "1:00 PM", available: true },
+          { time: "2:00 PM", available: false },
+          { time: "3:00 PM", available: true },
+        ],
+      },
+      {
+        date: "2026-01-23",
+        times: [
+          { time: "9:00 AM", available: true },
+          { time: "10:00 AM", available: true },
+          { time: "11:00 AM", available: false },
+          { time: "1:00 PM", available: true },
+          { time: "2:00 PM", available: true },
+          { time: "3:00 PM", available: true },
+        ],
+      },
+      {
+        date: "2026-01-24",
+        times: [
+          { time: "9:00 AM", available: true },
+          { time: "10:00 AM", available: true },
+          { time: "11:00 AM", available: true },
+          { time: "1:00 PM", available: false },
+          { time: "2:00 PM", available: true },
+          { time: "3:00 PM", available: false },
+        ],
+      },
+    ],
+    reviews: [
+      {
+        id: "r16",
+        userName: "Daniel Jackson",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Daniel",
+        rating: 5,
+        date: "2026-01-15",
+        comment:
+          "Painted our entire house. Work is impeccable and they were very tidy!",
+      },
+      {
+        id: "r17",
+        userName: "Laura Thompson",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Laura",
+        rating: 4,
+        date: "2026-01-10",
+        comment:
+          "Great color advice and smooth finish. Very happy with the results.",
+      },
+      {
+        id: "r18",
+        userName: "Brian Harris",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Brian",
+        rating: 4,
+        date: "2026-01-05",
+        comment:
+          "Professional team, finished on time. Kitchen cabinets look brand new!",
+      },
+    ],
+  },
+];

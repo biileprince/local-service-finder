@@ -2,7 +2,11 @@
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
-  (typeof window !== "undefined" ? "" : "http://localhost:3000");
+  (typeof window !== "undefined" 
+    ? "" 
+    : process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : "http://localhost:3000");
 
 export interface ApiError {
   error: string;

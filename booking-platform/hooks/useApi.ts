@@ -104,21 +104,31 @@ export interface Booking {
   time: string;
   address: string;
   price: number;
-  status: "upcoming" | "completed" | "cancelled";
+  status: "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
   canCancel?: boolean;
   canReview?: boolean;
 }
 
 function transformBooking(backendBooking: any): Booking {
-  const today = new Date();
-  const bookingDate = new Date(backendBooking.date);
-  const isUpcoming = bookingDate >= today;
+  // Use the actual status from backend
+  let status:
+    | "pending"
+    | "confirmed"
+    | "in_progress"
+    | "completed"
+    | "cancelled" = "pending";
 
-  let status: "upcoming" | "completed" | "cancelled" = "upcoming";
+  // Map backend status to frontend status
   if (backendBooking.status === "cancelled") {
     status = "cancelled";
-  } else if (backendBooking.status === "completed" || !isUpcoming) {
+  } else if (backendBooking.status === "completed") {
     status = "completed";
+  } else if (backendBooking.status === "in_progress") {
+    status = "in_progress";
+  } else if (backendBooking.status === "confirmed") {
+    status = "confirmed";
+  } else {
+    status = "pending"; // Default to pending
   }
 
   return {
@@ -134,10 +144,13 @@ function transformBooking(backendBooking: any): Booking {
     service: backendBooking.problemDescription || "Service",
     date: backendBooking.date,
     time: backendBooking.time || backendBooking.startTime,
-    address: backendBooking.serviceAddress || backendBooking.address || "Address not specified",
+    address:
+      backendBooking.serviceAddress ||
+      backendBooking.address ||
+      "Address not specified",
     price: backendBooking.totalAmount || 0,
     status,
-    canCancel: status === "upcoming" && backendBooking.status !== "cancelled",
+    canCancel: status !== "cancelled" && status !== "completed",
     canReview: status === "completed" && !backendBooking.hasReview,
   };
 }

@@ -162,17 +162,6 @@ export function BookingModal({
                   {provider.rating} ⭐ Rated
                 </Badge>
               </div>
-              <div className="text-right">
-                <div className="text-xs text-gray-600 font-semibold mb-1">
-                  Starting at
-                </div>
-                <div className="text-2xl font-bold text-[#f97316]">
-                  ${provider.hourlyRate}
-                </div>
-                <div className="text-xs text-gray-600 font-medium">
-                  per hour
-                </div>
-              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3 pt-3 border-t-2 border-[#f97316]/20">
@@ -236,7 +225,8 @@ export function BookingModal({
             <p className="text-sm text-blue-900 font-medium">
               <strong className="font-bold">Note:</strong> This is a booking
               request. {provider.name} will contact you to confirm the
-              appointment and provide a final quote based on your description.
+              appointment. You can discuss and agree on pricing directly with
+              the provider.
             </p>
           </div>
         </div>

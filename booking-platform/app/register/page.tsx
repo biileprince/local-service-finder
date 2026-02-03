@@ -34,13 +34,30 @@ export default function RegisterPage() {
       return;
     }
 
+    // Validate password strength
+    if (!/[A-Z]/.test(password)) {
+      setError("Password must contain at least one uppercase letter");
+      return;
+    }
+
+    if (!/[a-z]/.test(password)) {
+      setError("Password must contain at least one lowercase letter");
+      return;
+    }
+
+    if (!/[0-9]/.test(password)) {
+      setError("Password must contain at least one number");
+      return;
+    }
+
     setLoading(true);
 
     try {
       await register(email, password, name, role);
       router.push("/");
     } catch (err: any) {
-      setError(err.response?.data?.error || "Failed to register");
+      console.error("Registration error:", err);
+      setError(err.message || "Failed to register. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -123,7 +140,7 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                placeholder="you@example.com"
+                placeholder="john.doe@example.com"
                 required
               />
             </div>
@@ -155,6 +172,9 @@ export default function RegisterPage() {
                 )}
               </button>
             </div>
+            <p className="mt-1 text-xs text-gray-500">
+              Must be 8+ characters with uppercase, lowercase, and number
+            </p>
           </div>
 
           <div>

@@ -225,16 +225,21 @@ export default function DashboardPage() {
           createdAt: b.createdAt,
         }));
         setBookings(transformedBookings);
-      } catch (err) {
+      } catch (err: any) {
+        console.error("Fetch bookings error:", err);
+        if (err.message === "Not a provider") {
+          // Redirect to onboarding if provider profile doesn't exist
+          router.push("/onboarding");
+          return;
+        }
         setError("Failed to load bookings");
-        console.error(err);
       } finally {
         setLoading(false);
       }
     }
 
     fetchBookings();
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user, router]);
 
   const handleStatusUpdate = async (id: string, status: string) => {
     try {

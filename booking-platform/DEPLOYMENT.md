@@ -27,6 +27,7 @@ curl -X POST https://your-app.vercel.app/api/seed \
 ```
 
 Replace:
+
 - `your-app.vercel.app` with your actual Vercel URL
 - `your-seed-secret-here` with the SEED_SECRET from your environment variables
 
@@ -43,6 +44,7 @@ This will seed the production database from your local environment.
 ### 3. Verify Data
 
 Visit your deployed site:
+
 - Homepage should show categories and featured providers
 - `/search` page should list all providers
 - Test creating an account and logging in

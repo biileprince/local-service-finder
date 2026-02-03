@@ -57,7 +57,7 @@ export function Footer() {
               <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center">
                 <Wrench className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold">LocalPro</span>
+              <span className="text-xl font-bold">Local Service Finder</span>
             </Link>
             <p className="text-gray-400 text-sm mb-6 max-w-xs">
               Connecting you with trusted local service professionals. Quality
@@ -65,22 +65,22 @@ export function Footer() {
             </p>
             <div className="space-y-3">
               <a
-                href="mailto:support@localpro.com"
+                href="mailto:support@localservicefinder.com"
                 className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors text-sm"
               >
                 <Mail className="w-4 h-4" />
-                support@localpro.com
+                support@localservicefinder.com
               </a>
               <a
-                href="tel:1-800-LOCAL-PRO"
+                href="tel:+233555902675"
                 className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors text-sm"
               >
                 <Phone className="w-4 h-4" />
-                1-800-LOCAL-PRO
+                +233 555 902 675
               </a>
               <p className="flex items-center gap-3 text-gray-400 text-sm">
                 <MapPin className="w-4 h-4" />
-                San Francisco, CA
+                Cape Coast, Ghana
               </p>
             </div>
           </div>
@@ -165,7 +165,8 @@ export function Footer() {
         {/* Bottom Section */}
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-gray-400 text-sm">
-            © {new Date().getFullYear()} LocalPro. All rights reserved.
+            © {new Date().getFullYear()} Local Service Finder. All rights
+            reserved.
           </p>
 
           {/* Social Links */}

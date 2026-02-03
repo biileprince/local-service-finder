@@ -168,7 +168,13 @@ export async function PATCH(
     }
 
     // Validate status transitions
-    const validStatuses = ["pending", "confirmed", "completed", "cancelled"];
+    const validStatuses = [
+      "pending",
+      "confirmed",
+      "in_progress",
+      "completed",
+      "cancelled",
+    ];
     if (status && !validStatuses.includes(status)) {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
@@ -177,6 +183,14 @@ export async function PATCH(
     if (status === "confirmed" && !isProvider) {
       return NextResponse.json(
         { error: "Only providers can confirm bookings" },
+        { status: 403 },
+      );
+    }
+
+    // Only providers can start jobs
+    if (status === "in_progress" && !isProvider) {
+      return NextResponse.json(
+        { error: "Only providers can start jobs" },
         { status: 403 },
       );
     }

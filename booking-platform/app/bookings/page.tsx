@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -23,7 +23,12 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useBookings, Booking } from "@/hooks/useApi";
 import { useAuth } from "@/contexts/AuthContext";
 
-type BookingStatus = "upcoming" | "completed" | "cancelled";
+type BookingStatus =
+  | "pending"
+  | "confirmed"
+  | "in_progress"
+  | "completed"
+  | "cancelled";
 
 const statusConfig: Record<
   BookingStatus,
@@ -33,9 +38,19 @@ const statusConfig: Record<
     icon: React.ComponentType<{ className?: string }>;
   }
 > = {
-  upcoming: {
-    label: "Upcoming",
+  pending: {
+    label: "Pending",
+    color: "bg-yellow-100 text-yellow-700",
+    icon: AlertCircle,
+  },
+  confirmed: {
+    label: "Confirmed",
     color: "bg-blue-100 text-blue-700",
+    icon: CheckCircle,
+  },
+  in_progress: {
+    label: "In Progress",
+    color: "bg-purple-100 text-purple-700",
     icon: Clock,
   },
   completed: {
@@ -78,7 +93,8 @@ function BookingCard({
   onCancel?: (id: string) => void;
 }) {
   const [showActions, setShowActions] = useState(false);
-  const status = statusConfig[booking.status];
+  const status =
+    statusConfig[booking.status as BookingStatus] || statusConfig.pending;
   const StatusIcon = status.icon;
 
   return (
@@ -139,7 +155,17 @@ function BookingCard({
           </div>
 
           <div className="flex items-center gap-2">
-            {booking.status === "upcoming" && (
+            {booking.status === "pending" && (
+              <>
+                <Button size="sm" variant="outline" className="gap-1.5">
+                  <MessageSquare className="w-4 h-4" />
+                  <span className="hidden sm:inline">Message</span>
+                </Button>
+              </>
+            )}
+
+            {(booking.status === "confirmed" ||
+              booking.status === "in_progress") && (
               <>
                 <Button size="sm" variant="outline" className="gap-1.5">
                   <MessageSquare className="w-4 h-4" />
@@ -218,9 +244,26 @@ function BookingCard({
 export default function BookingsPage() {
   const router = useRouter();
   const { isAuthenticated, loading: authLoading } = useAuth();
-  const { bookings, loading, error, cancelBooking } = useBookings();
+  const { bookings, loading, error, cancelBooking, refetch } = useBookings();
   const [activeTab, setActiveTab] = useState<BookingStatus | "all">("all");
   const [cancellingId, setCancellingId] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Auto-refresh every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(interval);
+  }, [refetch]);
+
+  // Manual refresh function
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  };
 
   // Redirect if not authenticated
   if (!authLoading && !isAuthenticated) {
@@ -233,7 +276,13 @@ export default function BookingsPage() {
     return bookings.filter((b) => b.status === activeTab);
   }, [bookings, activeTab]);
 
-  const upcomingCount = bookings.filter((b) => b.status === "upcoming").length;
+  const pendingCount = bookings.filter((b) => b.status === "pending").length;
+  const confirmedCount = bookings.filter(
+    (b) => b.status === "confirmed",
+  ).length;
+  const inProgressCount = bookings.filter(
+    (b) => b.status === "in_progress",
+  ).length;
   const completedCount = bookings.filter(
     (b) => b.status === "completed",
   ).length;
@@ -272,18 +321,56 @@ export default function BookingsPage() {
                 Manage your service appointments
               </p>
             </div>
-            <Link href="/search">
-              <Button>Book New Service</Button>
-            </Link>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+              >
+                {isRefreshing ? (
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                ) : (
+                  <svg
+                    className="w-4 h-4 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                  </svg>
+                )}
+                Refresh
+              </Button>
+              <Link href="/search">
+                <Button>Book New Service</Button>
+              </Link>
+            </div>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 mt-6">
+          <div className="grid grid-cols-5 gap-4 mt-6">
+            <div className="bg-yellow-50 rounded-xl p-4 text-center">
+              <p className="text-2xl font-bold text-yellow-700">
+                {pendingCount}
+              </p>
+              <p className="text-sm text-yellow-600">Pending</p>
+            </div>
             <div className="bg-blue-50 rounded-xl p-4 text-center">
               <p className="text-2xl font-bold text-blue-700">
-                {upcomingCount}
+                {confirmedCount}
               </p>
-              <p className="text-sm text-blue-600">Upcoming</p>
+              <p className="text-sm text-blue-600">Confirmed</p>
+            </div>
+            <div className="bg-purple-50 rounded-xl p-4 text-center">
+              <p className="text-2xl font-bold text-purple-700">
+                {inProgressCount}
+              </p>
+              <p className="text-sm text-purple-600">In Progress</p>
             </div>
             <div className="bg-green-50 rounded-xl p-4 text-center">
               <p className="text-2xl font-bold text-green-700">
@@ -306,8 +393,14 @@ export default function BookingsPage() {
         {/* Tabs */}
         <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
           {[
-            { key: "all", label: "All Bookings", count: bookings.length },
-            { key: "upcoming", label: "Upcoming", count: upcomingCount },
+            { key: "all", label: "All", count: bookings.length },
+            { key: "pending", label: "Pending", count: pendingCount },
+            { key: "confirmed", label: "Confirmed", count: confirmedCount },
+            {
+              key: "in_progress",
+              label: "In Progress",
+              count: inProgressCount,
+            },
             { key: "completed", label: "Completed", count: completedCount },
             { key: "cancelled", label: "Cancelled", count: cancelledCount },
           ].map((tab) => (

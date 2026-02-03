@@ -26,7 +26,8 @@ export default function LoginPage() {
       await login(email, password);
       router.push("/");
     } catch (err: any) {
-      setError(err.response?.data?.error || "Failed to login");
+      console.error("Login error:", err);
+      setError(err.message || "Failed to login. Please check your credentials.");
     } finally {
       setLoading(false);
     }
@@ -60,7 +61,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                placeholder="john.doe@email.com"
+                placeholder="john@example.com"
                 required
               />
             </div>

@@ -4,531 +4,510 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 import bcrypt from "bcryptjs";
 
-// Create PostgreSQL connection pool
 const connectionString = process.env.DATABASE_URL!;
 const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
+type CategorySeed = {
+  name: string;
+  slug: string;
+  description: string;
+  icon: string;
+  color: string;
+};
+
+type ProviderSeed = {
+  key: string;
+  email: string;
+  name: string;
+  phone: string;
+  location: string;
+  bio: string;
+  yearsExperience: number;
+  verified: boolean;
+  featured: boolean;
+  categories: string[];
+  specialties: string[];
+};
+
+const CATEGORY_SEEDS: CategorySeed[] = [
+  {
+    name: "Plumbing",
+    slug: "plumbing",
+    description: "Pipe repairs, leak fixes, and water system installation",
+    icon: "Wrench",
+    color: "bg-blue-50 text-blue-600",
+  },
+  {
+    name: "Electrical",
+    slug: "electrical",
+    description: "House wiring, meter upgrades, and fault fixing",
+    icon: "Zap",
+    color: "bg-yellow-50 text-yellow-600",
+  },
+  {
+    name: "Cleaning",
+    slug: "cleaning",
+    description: "Home, office, and post-construction cleaning",
+    icon: "Sparkles",
+    color: "bg-green-50 text-green-600",
+  },
+  {
+    name: "Carpentry",
+    slug: "carpentry",
+    description: "Furniture, doors, roofing frames, and repairs",
+    icon: "Hammer",
+    color: "bg-amber-50 text-amber-600",
+  },
+  {
+    name: "AC and Cooling",
+    slug: "ac-and-cooling",
+    description: "Air-conditioner installation and maintenance",
+    icon: "Wind",
+    color: "bg-cyan-50 text-cyan-600",
+  },
+  {
+    name: "Painting",
+    slug: "painting",
+    description: "Interior and exterior painting services",
+    icon: "Paintbrush",
+    color: "bg-orange-50 text-orange-600",
+  },
+  {
+    name: "Roofing",
+    slug: "roofing",
+    description: "Roof repairs, leak control, and replacements",
+    icon: "Home",
+    color: "bg-red-50 text-red-600",
+  },
+  {
+    name: "Landscaping",
+    slug: "landscaping",
+    description: "Garden setup, lawn trimming, and compound care",
+    icon: "Leaf",
+    color: "bg-emerald-50 text-emerald-600",
+  },
+  {
+    name: "Auto Mechanic",
+    slug: "auto-mechanic",
+    description: "Car diagnostics, servicing, and repairs",
+    icon: "Car",
+    color: "bg-slate-50 text-slate-700",
+  },
+  {
+    name: "Pest Control",
+    slug: "pest-control",
+    description: "Fumigation and pest prevention for homes and shops",
+    icon: "Shield",
+    color: "bg-lime-50 text-lime-700",
+  },
+  {
+    name: "Water Delivery",
+    slug: "water-delivery",
+    description: "Borehole and tanker water delivery services",
+    icon: "Droplet",
+    color: "bg-sky-50 text-sky-600",
+  },
+  {
+    name: "Pet Care",
+    slug: "pet-care",
+    description: "Pet grooming, walking, and wellness support",
+    icon: "Dog",
+    color: "bg-pink-50 text-pink-600",
+  },
+];
+
+const PROVIDER_SEEDS: ProviderSeed[] = [
+  {
+    key: "kwesi-plumbing",
+    email: "kwesi.plumbing@localservicefinder.gh",
+    name: "Kwesi Plumbing Works",
+    phone: "+233244100111",
+    location: "Cape Coast, Ghana",
+    bio: "Reliable plumbing team for homes and hostels in Cape Coast.",
+    yearsExperience: 9,
+    verified: true,
+    featured: true,
+    categories: ["plumbing"],
+    specialties: ["Leak repair", "Pipe replacement", "Water heater setup"],
+  },
+  {
+    key: "adjoa-electrical",
+    email: "adjoa.electrical@localservicefinder.gh",
+    name: "Adjoa Electrical Services",
+    phone: "+233500220333",
+    location: "Accra, Ghana",
+    bio: "Certified electrical technician focused on safe home wiring.",
+    yearsExperience: 11,
+    verified: true,
+    featured: true,
+    categories: ["electrical"],
+    specialties: ["Fault tracing", "DB board replacement", "Socket installation"],
+  },
+  {
+    key: "mensah-cleaning",
+    email: "mensah.cleaning@localservicefinder.gh",
+    name: "Mensah Deep Cleaning",
+    phone: "+233554330444",
+    location: "Kumasi, Ghana",
+    bio: "Professional deep cleaning for apartments, shops, and offices.",
+    yearsExperience: 6,
+    verified: true,
+    featured: false,
+    categories: ["cleaning"],
+    specialties: ["Move-out cleaning", "Office cleaning", "Sofa cleaning"],
+  },
+  {
+    key: "boateng-carpentry",
+    email: "boateng.carpentry@localservicefinder.gh",
+    name: "Boateng Carpentry",
+    phone: "+233244998876",
+    location: "Takoradi, Ghana",
+    bio: "Custom carpentry and woodwork with strong finishing quality.",
+    yearsExperience: 14,
+    verified: true,
+    featured: false,
+    categories: ["carpentry", "roofing"],
+    specialties: ["Kitchen cabinets", "Wardrobes", "Roof wood framing"],
+  },
+  {
+    key: "ecco-cooling",
+    email: "ecco.cooling@localservicefinder.gh",
+    name: "Ecco AC and Cooling",
+    phone: "+233200115577",
+    location: "Kasoa, Ghana",
+    bio: "Air-conditioner installation and servicing for homes and offices.",
+    yearsExperience: 8,
+    verified: true,
+    featured: true,
+    categories: ["ac-and-cooling"],
+    specialties: ["AC installation", "Gas refill", "Routine maintenance"],
+  },
+  {
+    key: "awuku-painting",
+    email: "awuku.painting@localservicefinder.gh",
+    name: "Awuku Paint and Decor",
+    phone: "+233245556788",
+    location: "Cape Coast, Ghana",
+    bio: "Affordable interior and exterior painting for modern homes.",
+    yearsExperience: 10,
+    verified: true,
+    featured: false,
+    categories: ["painting"],
+    specialties: ["Wall putty", "Exterior repaint", "Color consultation"],
+  },
+  {
+    key: "kobby-fumi",
+    email: "kobby.fumigation@localservicefinder.gh",
+    name: "Kobby Fumigation",
+    phone: "+233558120908",
+    location: "Accra, Ghana",
+    bio: "Safe fumigation and pest control for homes and businesses.",
+    yearsExperience: 7,
+    verified: true,
+    featured: false,
+    categories: ["pest-control"],
+    specialties: ["Cockroach control", "Bedbug treatment", "Rodent control"],
+  },
+  {
+    key: "nana-water",
+    email: "nana.water@localservicefinder.gh",
+    name: "Nana Water Delivery",
+    phone: "+233541110909",
+    location: "Cape Coast, Ghana",
+    bio: "Fast water tanker and household water delivery service.",
+    yearsExperience: 5,
+    verified: true,
+    featured: false,
+    categories: ["water-delivery"],
+    specialties: ["Tanker dispatch", "Bulk delivery", "Emergency supply"],
+  },
+];
+
+const CUSTOMER_SEEDS = [
+  {
+    key: "ama",
+    email: "ama.boakye@example.com",
+    name: "Ama Boakye",
+    phone: "+233555902675",
+  },
+  {
+    key: "kojo",
+    email: "kojo.owusu@example.com",
+    name: "Kojo Owusu",
+    phone: "+233241234567",
+  },
+  {
+    key: "efua",
+    email: "efua.ansah@example.com",
+    name: "Efua Ansah",
+    phone: "+233208888444",
+  },
+  {
+    key: "yaw",
+    email: "yaw.mensimah@example.com",
+    name: "Yaw Mensimah",
+    phone: "+233274445556",
+  },
+];
+
+function dateOffset(days: number): string {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  return date.toISOString().split("T")[0];
+}
+
 async function main() {
-  console.log("🌱 Starting database seed...");
-  console.log(`📍 Database: PostgreSQL`);
-  console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
+  console.log("Starting Ghana-focused database seed...");
+  console.log(`Database: PostgreSQL`);
+  console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
 
-  // Clear existing data (try-catch in case tables don't exist yet)
-  try {
-    await prisma.review.deleteMany();
-    await prisma.booking.deleteMany();
-    await prisma.timeSlot.deleteMany();
-    await prisma.availability.deleteMany();
-    await prisma.providerSpecialty.deleteMany();
-    await prisma.providerCategory.deleteMany();
-    await prisma.provider.deleteMany();
-    await prisma.category.deleteMany();
-    await prisma.user.deleteMany();
-    console.log("✅ Cleared existing data");
-  } catch (error) {
-    console.log("✅ No existing data to clear (fresh database)");
-  }
+  await prisma.review.deleteMany();
+  await prisma.booking.deleteMany();
+  await prisma.timeSlot.deleteMany();
+  await prisma.availability.deleteMany();
+  await prisma.providerSpecialty.deleteMany();
+  await prisma.providerCategory.deleteMany();
+  await prisma.provider.deleteMany();
+  await prisma.category.deleteMany();
+  await prisma.user.deleteMany();
+  console.log("Cleared previous data");
 
-  // Create categories
-  const categories = await Promise.all([
-    prisma.category.create({
-      data: {
-        name: "Home Cleaning",
-        slug: "home-cleaning",
-        description: "Professional house cleaning and maid services",
-        icon: "🏠",
-      },
-    }),
-    prisma.category.create({
-      data: {
-        name: "Plumbing",
-        slug: "plumbing",
-        description: "Pipe repairs, installations, and maintenance",
-        icon: "🔧",
-      },
-    }),
-    prisma.category.create({
-      data: {
-        name: "Electrical",
-        slug: "electrical",
-        description: "Electrical repairs, wiring, and installations",
-        icon: "⚡",
-      },
-    }),
-    prisma.category.create({
-      data: {
-        name: "Landscaping",
-        slug: "landscaping",
-        description: "Lawn care, garden design, and outdoor maintenance",
-        icon: "🌳",
-      },
-    }),
-    prisma.category.create({
-      data: {
-        name: "Painting",
-        slug: "painting",
-        description: "Interior and exterior painting services",
-        icon: "🎨",
-      },
-    }),
-    prisma.category.create({
-      data: {
-        name: "HVAC",
-        slug: "hvac",
-        description: "Heating, ventilation, and air conditioning",
-        icon: "❄️",
-      },
-    }),
-    prisma.category.create({
-      data: {
-        name: "Carpentry",
-        slug: "carpentry",
-        description: "Custom woodwork, furniture, and repairs",
-        icon: "🪚",
-      },
-    }),
-    prisma.category.create({
-      data: {
-        name: "Moving",
-        slug: "moving",
-        description: "Residential and commercial moving services",
-        icon: "📦",
-      },
-    }),
-    prisma.category.create({
-      data: {
-        name: "Pest Control",
-        slug: "pest-control",
-        description: "Pest extermination and prevention",
-        icon: "🐜",
-      },
-    }),
-    prisma.category.create({
-      data: {
-        name: "Appliance Repair",
-        slug: "appliance-repair",
-        description: "Home appliance repairs and maintenance",
-        icon: "🔌",
-      },
-    }),
-    prisma.category.create({
-      data: {
-        name: "Roofing",
-        slug: "roofing",
-        description: "Roof repairs, replacements, and installations",
-        icon: "🏗️",
-      },
-    }),
-    prisma.category.create({
-      data: {
-        name: "Security",
-        slug: "security",
-        description: "Home security systems and installations",
-        icon: "🔒",
-      },
-    }),
-    prisma.category.create({
-      data: {
-        name: "Pool Services",
-        slug: "pool-services",
-        description: "Pool cleaning, maintenance, and repairs",
-        icon: "🏊",
-      },
-    }),
-    prisma.category.create({
-      data: {
-        name: "Handyman",
-        slug: "handyman",
-        description: "General home repairs and odd jobs",
-        icon: "🛠️",
-      },
-    }),
-    prisma.category.create({
-      data: {
-        name: "Window Cleaning",
-        slug: "window-cleaning",
-        description: "Professional window cleaning services",
-        icon: "🪟",
-      },
-    }),
-    prisma.category.create({
-      data: {
-        name: "Interior Design",
-        slug: "interior-design",
-        description: "Home design and decoration services",
-        icon: "🛋️",
-      },
-    }),
-    prisma.category.create({
-      data: {
-        name: "Flooring",
-        slug: "flooring",
-        description: "Floor installation, repair, and refinishing",
-        icon: "🪵",
-      },
-    }),
-    prisma.category.create({
-      data: {
-        name: "Smart Home",
-        slug: "smart-home",
-        description: "Smart home device installation and setup",
-        icon: "📱",
-      },
-    }),
-  ]);
+  const categories = await Promise.all(
+    CATEGORY_SEEDS.map((category) => prisma.category.create({ data: category })),
+  );
+  const categoriesBySlug = new Map(categories.map((c) => [c.slug, c]));
+  console.log(`Created ${categories.length} Ghana service categories`);
 
-  console.log(`✅ Created ${categories.length} categories`);
-
-  // Hash password for all users
   const hashedPassword = await bcrypt.hash("Password123", 12);
 
-  // Create sample users (customers)
-  const customers = await Promise.all([
-    prisma.user.create({
-      data: {
-        email: "john@example.com",
-        name: "John Smith",
-        password: hashedPassword,
-        role: "customer",
-        phone: "(555) 123-4567",
-      },
-    }),
-    prisma.user.create({
-      data: {
-        email: "sarah@example.com",
-        name: "Sarah Johnson",
-        password: hashedPassword,
-        role: "customer",
-        phone: "(555) 234-5678",
-      },
-    }),
-    prisma.user.create({
-      data: {
-        email: "mike@example.com",
-        name: "Mike Williams",
-        password: hashedPassword,
-        role: "customer",
-        phone: "(555) 345-6789",
-      },
-    }),
-  ]);
+  const customers = await Promise.all(
+    CUSTOMER_SEEDS.map((customer) =>
+      prisma.user.create({
+        data: {
+          email: customer.email,
+          name: customer.name,
+          password: hashedPassword,
+          role: "customer",
+          phone: customer.phone,
+        },
+      }),
+    ),
+  );
+  const customersByKey = new Map(CUSTOMER_SEEDS.map((c, i) => [c.key, customers[i]]));
+  console.log(`Created ${customers.length} customer accounts`);
 
-  console.log(`✅ Created ${customers.length} customers`);
+  const providersByKey = new Map<string, { id: string; userId: string }>();
 
-  // Create provider users and their profiles
-  const providerData = [
-    {
-      email: "mary.cleaner@example.com",
-      name: "Mary's Cleaning Service",
-      phone: "(555) 111-1111",
-      location: "New York, NY",
-      bio: "Professional cleaning services with 15 years of experience. We treat your home like our own!",
-      hourlyRate: 45,
-      yearsExperience: 15,
-      categorySlug: "home-cleaning",
-      specialties: ["Deep Cleaning", "Move-in/Move-out", "Regular Maintenance"],
-      verified: true,
-      featured: true,
-      rating: 4.9,
-      reviewCount: 127,
-    },
-    {
-      email: "bob.plumber@example.com",
-      name: "Bob's Plumbing Co",
-      phone: "(555) 222-2222",
-      location: "Los Angeles, CA",
-      bio: "Licensed master plumber with expertise in residential and commercial plumbing. Available 24/7 for emergencies.",
-      hourlyRate: 85,
-      yearsExperience: 20,
-      categorySlug: "plumbing",
-      specialties: [
-        "Emergency Repairs",
-        "Pipe Installation",
-        "Water Heaters",
-        "Drain Cleaning",
-      ],
-      verified: true,
-      featured: true,
-      rating: 4.8,
-      reviewCount: 89,
-    },
-    {
-      email: "spark.electric@example.com",
-      name: "Spark Electric Solutions",
-      phone: "(555) 333-3333",
-      location: "Chicago, IL",
-      bio: "Certified electricians specializing in residential electrical work. Safety is our top priority.",
-      hourlyRate: 95,
-      yearsExperience: 12,
-      categorySlug: "electrical",
-      specialties: [
-        "Panel Upgrades",
-        "Lighting Installation",
-        "Outlet Repairs",
-        "EV Chargers",
-      ],
-      verified: true,
-      featured: false,
-      rating: 4.7,
-      reviewCount: 56,
-    },
-    {
-      email: "green.lawn@example.com",
-      name: "Green Thumb Landscaping",
-      phone: "(555) 444-4444",
-      location: "Houston, TX",
-      bio: "Transform your outdoor space into a beautiful oasis. Full-service landscaping and lawn care.",
-      hourlyRate: 55,
-      yearsExperience: 10,
-      categorySlug: "landscaping",
-      specialties: [
-        "Lawn Maintenance",
-        "Garden Design",
-        "Tree Trimming",
-        "Irrigation",
-      ],
-      verified: true,
-      featured: true,
-      rating: 4.9,
-      reviewCount: 203,
-    },
-    {
-      email: "pro.painters@example.com",
-      name: "Pro Painters Plus",
-      phone: "(555) 555-5555",
-      location: "Phoenix, AZ",
-      bio: "Quality painting services for homes and businesses. We use only premium paints and materials.",
-      hourlyRate: 65,
-      yearsExperience: 8,
-      categorySlug: "painting",
-      specialties: [
-        "Interior Painting",
-        "Exterior Painting",
-        "Cabinet Refinishing",
-        "Wallpaper",
-      ],
-      verified: true,
-      featured: false,
-      rating: 4.6,
-      reviewCount: 42,
-    },
-    {
-      email: "cool.hvac@example.com",
-      name: "Cool Comfort HVAC",
-      phone: "(555) 666-6666",
-      location: "Philadelphia, PA",
-      bio: "Keep your home comfortable year-round. Expert HVAC installation, repair, and maintenance.",
-      hourlyRate: 110,
-      yearsExperience: 18,
-      categorySlug: "hvac",
-      specialties: [
-        "AC Repair",
-        "Furnace Service",
-        "Duct Cleaning",
-        "System Installation",
-      ],
-      verified: true,
-      featured: true,
-      rating: 4.8,
-      reviewCount: 78,
-    },
-    {
-      email: "wood.works@example.com",
-      name: "Woodworks Custom Carpentry",
-      phone: "(555) 777-7777",
-      location: "San Antonio, TX",
-      bio: "Custom woodwork and carpentry with attention to detail. From repairs to custom furniture.",
-      hourlyRate: 75,
-      yearsExperience: 25,
-      categorySlug: "carpentry",
-      specialties: [
-        "Custom Cabinets",
-        "Deck Building",
-        "Furniture Repair",
-        "Crown Molding",
-      ],
-      verified: true,
-      featured: false,
-      rating: 4.9,
-      reviewCount: 34,
-    },
-    {
-      email: "quick.movers@example.com",
-      name: "Quick & Careful Movers",
-      phone: "(555) 888-8888",
-      location: "San Diego, CA",
-      bio: "Stress-free moving services. We handle your belongings with care and get you settled fast.",
-      hourlyRate: 50,
-      yearsExperience: 7,
-      categorySlug: "moving",
-      specialties: [
-        "Local Moving",
-        "Long Distance",
-        "Packing Services",
-        "Storage",
-      ],
-      verified: true,
-      featured: true,
-      rating: 4.5,
-      reviewCount: 156,
-    },
-    {
-      email: "jack.alltradesf@example.com",
-      name: "Jack of All Trades",
-      phone: "(555) 999-9999",
-      location: "Dallas, TX",
-      bio: "Your go-to handyman for all home repairs. No job too small!",
-      hourlyRate: 45,
-      yearsExperience: 12,
-      categorySlug: "handyman",
-      specialties: [
-        "General Repairs",
-        "Assembly",
-        "Mounting",
-        "Minor Plumbing",
-      ],
-      verified: true,
-      featured: false,
-      rating: 4.7,
-      reviewCount: 89,
-    },
-    {
-      email: "pest.free@example.com",
-      name: "Pest-Free Home Services",
-      phone: "(555) 101-0101",
-      location: "San Jose, CA",
-      bio: "Safe and effective pest control solutions for your home. EPA-approved methods.",
-      hourlyRate: 60,
-      yearsExperience: 14,
-      categorySlug: "pest-control",
-      specialties: [
-        "Termite Treatment",
-        "Rodent Control",
-        "Insect Removal",
-        "Prevention",
-      ],
-      verified: true,
-      featured: false,
-      rating: 4.6,
-      reviewCount: 67,
-    },
-  ];
-
-  const providers = [];
-
-  for (const data of providerData) {
-    const category = categories.find((c) => c.slug === data.categorySlug);
-    if (!category) continue;
-
+  for (const providerSeed of PROVIDER_SEEDS) {
     const user = await prisma.user.create({
       data: {
-        email: data.email,
-        name: data.name,
+        email: providerSeed.email,
+        name: providerSeed.name,
         password: hashedPassword,
         role: "provider",
-        phone: data.phone,
+        phone: providerSeed.phone,
       },
     });
 
     const provider = await prisma.provider.create({
       data: {
         userId: user.id,
-        bio: data.bio,
-        location: data.location,
-        hourlyRate: data.hourlyRate,
-        yearsExperience: data.yearsExperience,
-        verified: data.verified,
-        featured: data.featured,
-        rating: data.rating,
-        reviewCount: data.reviewCount,
+        bio: providerSeed.bio,
+        hourlyRate: 0,
+        yearsExperience: providerSeed.yearsExperience,
+        location: providerSeed.location,
+        verified: providerSeed.verified,
+        featured: providerSeed.featured,
       },
     });
 
-    // Link provider to category
-    await prisma.providerCategory.create({
-      data: {
-        providerId: provider.id,
-        categoryId: category.id,
-      },
-    });
+    providersByKey.set(providerSeed.key, { id: provider.id, userId: user.id });
 
-    // Add specialties
-    for (const specialty of data.specialties) {
-      await prisma.providerSpecialty.create({
-        data: {
+    const selectedCategoryIds = providerSeed.categories
+      .map((slug) => categoriesBySlug.get(slug)?.id)
+      .filter((id): id is string => Boolean(id));
+
+    if (selectedCategoryIds.length > 0) {
+      await prisma.providerCategory.createMany({
+        data: selectedCategoryIds.map((categoryId) => ({
           providerId: provider.id,
-          specialty: specialty,
-        },
+          categoryId,
+        })),
       });
     }
 
-    // Create availability for next 7 days
-    const today = new Date();
-    for (let i = 0; i < 7; i++) {
-      const date = new Date(today);
-      date.setDate(date.getDate() + i);
-      const dateStr = date.toISOString().split("T")[0];
+    if (providerSeed.specialties.length > 0) {
+      await prisma.providerSpecialty.createMany({
+        data: providerSeed.specialties.map((specialty) => ({
+          providerId: provider.id,
+          specialty,
+        })),
+      });
+    }
 
+    for (let day = 0; day < 7; day++) {
       const availability = await prisma.availability.create({
         data: {
           providerId: provider.id,
-          date: dateStr,
+          date: dateOffset(day),
         },
       });
 
-      // Create time slots (9 AM to 5 PM)
-      const timeSlots = [
-        "09:00",
-        "10:00",
-        "11:00",
-        "12:00",
-        "13:00",
-        "14:00",
-        "15:00",
-        "16:00",
-        "17:00",
-      ];
-
-      for (const time of timeSlots) {
-        await prisma.timeSlot.create({
-          data: {
+      await prisma.timeSlot.createMany({
+        data: ["08:00", "09:30", "11:00", "13:00", "15:00", "17:00"].map(
+          (time, idx) => ({
             availabilityId: availability.id,
             time,
             available: true,
-          },
-        });
-      }
+            isFastest: idx === 0,
+          }),
+        ),
+      });
     }
-
-    providers.push(provider);
   }
 
-  console.log(`✅ Created ${providers.length} providers with availability`);
+  console.log(`Created ${PROVIDER_SEEDS.length} provider accounts with availability`);
 
-  // Create an admin user
+  const bookingSeeds = [
+    {
+      customerKey: "ama",
+      providerKey: "kwesi-plumbing",
+      date: dateOffset(1),
+      time: "09:30",
+      serviceAddress: "Abura, Cape Coast",
+      problemDescription: "Kitchen sink leak and low water pressure",
+      status: "pending",
+    },
+    {
+      customerKey: "kojo",
+      providerKey: "adjoa-electrical",
+      date: dateOffset(2),
+      time: "13:00",
+      serviceAddress: "East Legon, Accra",
+      problemDescription: "Circuit breaker trips when AC is turned on",
+      status: "confirmed",
+    },
+    {
+      customerKey: "efua",
+      providerKey: "ecco-cooling",
+      date: dateOffset(0),
+      time: "11:00",
+      serviceAddress: "Kasoa New Market",
+      problemDescription: "AC not cooling and making unusual noise",
+      status: "in_progress",
+    },
+    {
+      customerKey: "yaw",
+      providerKey: "mensah-cleaning",
+      date: dateOffset(-1),
+      time: "08:00",
+      serviceAddress: "Ahodwo, Kumasi",
+      problemDescription: "Deep cleaning after apartment renovation",
+      status: "completed",
+    },
+    {
+      customerKey: "ama",
+      providerKey: "awuku-painting",
+      date: dateOffset(-2),
+      time: "15:00",
+      serviceAddress: "University of Cape Coast area",
+      problemDescription: "Repaint two bedrooms and hallway",
+      status: "completed",
+    },
+    {
+      customerKey: "kojo",
+      providerKey: "kobby-fumi",
+      date: dateOffset(3),
+      time: "17:00",
+      serviceAddress: "Madina, Accra",
+      problemDescription: "Cockroach infestation in kitchen and store",
+      status: "cancelled",
+    },
+  ];
+
+  const createdBookings = [];
+  for (const bookingSeed of bookingSeeds) {
+    const customer = customersByKey.get(bookingSeed.customerKey);
+    const provider = providersByKey.get(bookingSeed.providerKey);
+    if (!customer || !provider) continue;
+
+    const booking = await prisma.booking.create({
+      data: {
+        customerId: customer.id,
+        providerId: provider.id,
+        date: bookingSeed.date,
+        time: bookingSeed.time,
+        serviceAddress: bookingSeed.serviceAddress,
+        problemDescription: bookingSeed.problemDescription,
+        status: bookingSeed.status,
+      },
+    });
+    createdBookings.push(booking);
+  }
+  console.log(`Created ${createdBookings.length} bookings with mixed statuses`);
+
+  await prisma.review.createMany({
+    data: [
+      {
+        userId: customersByKey.get("yaw")!.id,
+        providerId: providersByKey.get("mensah-cleaning")!.id,
+        rating: 5,
+        comment: "Very thorough cleaning and arrived right on time.",
+      },
+      {
+        userId: customersByKey.get("ama")!.id,
+        providerId: providersByKey.get("awuku-painting")!.id,
+        rating: 4,
+        comment: "Great finishing and clean paint lines, will book again.",
+      },
+      {
+        userId: customersByKey.get("kojo")!.id,
+        providerId: providersByKey.get("adjoa-electrical")!.id,
+        rating: 5,
+        comment: "Explained the fault clearly and fixed it safely.",
+      },
+    ],
+  });
+
+  for (const provider of providersByKey.values()) {
+    const reviews = await prisma.review.findMany({ where: { providerId: provider.id } });
+    const reviewCount = reviews.length;
+    const rating = reviewCount
+      ? Number(
+          (
+            reviews.reduce((sum, review) => sum + review.rating, 0) / reviewCount
+          ).toFixed(1),
+        )
+      : 0;
+
+    await prisma.provider.update({
+      where: { id: provider.id },
+      data: { reviewCount, rating },
+    });
+  }
+
   await prisma.user.create({
     data: {
-      email: "admin@localservice.com",
-      name: "Admin User",
+      email: "admin@localservicefinder.gh",
+      name: "Local Service Finder Admin",
       password: hashedPassword,
       role: "admin",
+      phone: "+233555000001",
     },
   });
 
-  console.log("✅ Created admin user");
-
-  console.log("\n🎉 Database seeding completed!");
-  console.log("\n📋 Test Accounts:");
-  console.log("   Customer: john@example.com / Password123");
-  console.log("   Provider: mary.cleaner@example.com / Password123");
-  console.log("   Admin: admin@localservice.com / Password123");
+  console.log("Created admin account");
+  console.log("Ghana-focused seeding completed successfully");
+  console.log("Test password for all users: Password123");
+  console.log("Customer example: ama.boakye@example.com");
+  console.log("Provider example: kwesi.plumbing@localservicefinder.gh");
 }
 
 main()
   .catch((e) => {
-    console.error("❌ Error during seeding:", e);
+    console.error("Error during seeding:", e);
     process.exit(1);
   })
   .finally(async () => {

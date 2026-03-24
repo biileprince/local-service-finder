@@ -17,6 +17,11 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const getErrorMessage = (err: unknown): string => {
+    if (err instanceof Error && err.message) return err.message;
+    return "Invalid email or password";
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -25,9 +30,9 @@ export default function LoginPage() {
     try {
       await login(email, password);
       router.push("/");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Login error:", err);
-      setError(err.message || "Failed to login. Please check your credentials.");
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -61,7 +66,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                placeholder="john@example.com"
+                placeholder="ama.boakye@example.com"
                 required
               />
             </div>
@@ -136,9 +141,9 @@ export default function LoginPage() {
           <p className="text-sm text-gray-500 text-center">
             Test accounts:
             <br />
-            Customer: john@example.com / Password123
+            Customer: ama.boakye@example.com / Password123
             <br />
-            Provider: mary.cleaner@example.com / Password123
+            Provider: kwesi.plumbing@localservicefinder.gh / Password123
           </p>
         </div>
       </Card>

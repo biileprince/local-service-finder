@@ -20,7 +20,7 @@ import {
   Paintbrush,
   Filter,
 } from "lucide-react";
-import { useProviders, useCategories } from "@/hooks/useApi";
+import { useProviders, useCategories, useOverviewTotals } from "@/hooks/useApi";
 import { ProviderCard } from "@/components/ProviderCard";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -138,6 +138,7 @@ function SearchContent() {
 
   // Fetch data from backend
   const { categories, loading: categoriesLoading } = useCategories();
+  const { totals, loading: overviewLoading } = useOverviewTotals();
   const { providers: allProviders, loading: providersLoading } = useProviders({
     category: selectedCategory !== "all" ? selectedCategory : undefined,
     search: searchQuery || undefined,
@@ -600,6 +601,49 @@ function SearchContent() {
             ) : null}
           </div>
         </div>
+      </div>
+
+      {/* Platform Overview */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+        <Card className="p-6 md:p-8 border-2 border-orange-100">
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="text-lg md:text-xl font-bold text-gray-900">
+              Platform Overview
+            </h3>
+            <Badge variant="secondary">Live Totals</Badge>
+          </div>
+
+          {overviewLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="h-20 rounded-xl bg-gray-100 animate-pulse" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="rounded-xl bg-orange-50 p-4 text-center">
+                <p className="text-2xl font-bold text-orange-700">{totals.customers}</p>
+                <p className="text-sm text-orange-600">Customers</p>
+              </div>
+              <div className="rounded-xl bg-blue-50 p-4 text-center">
+                <p className="text-2xl font-bold text-blue-700">{totals.providers}</p>
+                <p className="text-sm text-blue-600">Providers</p>
+              </div>
+              <div className="rounded-xl bg-emerald-50 p-4 text-center">
+                <p className="text-2xl font-bold text-emerald-700">{totals.categories}</p>
+                <p className="text-sm text-emerald-600">Categories</p>
+              </div>
+              <div className="rounded-xl bg-purple-50 p-4 text-center">
+                <p className="text-2xl font-bold text-purple-700">{totals.bookings}</p>
+                <p className="text-sm text-purple-600">Bookings</p>
+              </div>
+              <div className="rounded-xl bg-amber-50 p-4 text-center">
+                <p className="text-2xl font-bold text-amber-700">{totals.reviews}</p>
+                <p className="text-sm text-amber-600">Reviews</p>
+              </div>
+            </div>
+          )}
+        </Card>
       </div>
 
       {/* Mobile Filters Drawer */}

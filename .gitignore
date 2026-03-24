@@ -22,3 +22,18 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# Non-prototype workspaces (keep prototype-only flow clean)
+/backend/
+/frontend/
+/shared/
+/docker/
+/production-docs/
+/docker-compose.yml
+
+# Non-prototype files inside booking-platform
+/booking-platform/Dockerfile
+/booking-platform/PROJECT_DOCUMENTATION.md
+/booking-platform/PROJECT_RESEARCH.md
+/booking-platform/lib/backend-api.ts
+/booking-platform/lib/messages-socket.ts

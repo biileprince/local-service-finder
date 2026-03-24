@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { categoriesApi, providersApi, bookingsApi } from "@/lib/api";
+import { categoriesApi, providersApi, bookingsApi, overviewApi } from "@/lib/api";
 import { transformProvider, transformCategory } from "@/lib/transform";
 import { Provider, Category } from "@/types";
 
@@ -189,4 +189,39 @@ export function useBookings(status?: string) {
   };
 
   return { bookings, loading, error, refetch: fetchBookings, cancelBooking };
+}
+
+export interface OverviewTotals {
+  customers: number;
+  providers: number;
+  categories: number;
+  bookings: number;
+  reviews: number;
+}
+
+export function useOverviewTotals() {
+  const [totals, setTotals] = useState<OverviewTotals>({
+    customers: 0,
+    providers: 0,
+    categories: 0,
+    bookings: 0,
+    reviews: 0,
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    overviewApi
+      .getTotals()
+      .then((data) => {
+        setTotals(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
+  return { totals, loading, error };
 }

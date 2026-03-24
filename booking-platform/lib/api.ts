@@ -252,3 +252,16 @@ export const bookingsApi = {
     return ApiClient.delete<{ message: string }>(`/api/bookings/${id}`, true);
   },
 };
+
+// Overview API
+export const overviewApi = {
+  async getTotals() {
+    return ApiClient.get<{
+      customers: number;
+      providers: number;
+      categories: number;
+      bookings: number;
+      reviews: number;
+    }>("/api/overview");
+  },
+};
